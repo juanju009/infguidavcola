@@ -23,6 +23,7 @@ $SITE_CONFIG = [
 
   /* Responsable / anunciante del sitio. Debe ser una persona o empresa real. */
   'responsable'         => 'BEATRIZ ALVARADO BELTRAN',
+  'patrocinador_cedula' => '1.040.734.149', // Identificación del patrocinante (se muestra en el banner)
   'contacto_email'      => '', // PENDIENTE: correo real de contacto. Vacío = se oculta.
   'contacto_telefono'   => '', // PENDIENTE opcional. Vacío = se oculta.
 
@@ -274,6 +275,22 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 .franja__fila{display:flex;align-items:center;gap:var(--esp-2);padding:.9rem 0;font-size:var(--t-sm)}
 .franja__fila svg{flex:0 0 22px}
 .franja p{margin:0}
+/* =========================== 6b. PATROCINIO =========================== */
+.patrocinio{background:var(--c-fondo-alt);border-bottom:1px solid var(--c-borde)}
+.patrocinio__fila{display:flex;align-items:center;gap:var(--esp-3);padding:var(--esp-3) 0;flex-wrap:wrap;justify-content:center}
+.patrocinio__rotulo{font-size:var(--t-xs);font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--c-acento);flex:0 0 auto}
+.patrocinio__tarjeta{display:flex;align-items:center;gap:var(--esp-4);background:#F2F6F3;border:1px solid var(--c-borde);border-left:4px solid var(--c-acento);border-radius:var(--radio-sm);padding:.7rem 1.4rem}
+.patrocinio__dato{display:flex;flex-direction:column;gap:.15rem}
+.patrocinio__et{font-size:var(--t-xs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--c-texto-suave)}
+.patrocinio__val{font-size:var(--t-base);font-weight:800;color:var(--c-primario);letter-spacing:.01em}
+.patrocinio__nota{font-size:var(--t-sm);font-style:italic;color:var(--c-texto-suave);flex:0 0 auto;margin-left:auto}
+@media (max-width:860px){
+  .patrocinio__fila{justify-content:flex-start}
+  .patrocinio__nota{margin-left:0;flex-basis:100%}
+}
+@media (max-width:620px){
+  .patrocinio__tarjeta{flex-direction:column;align-items:flex-start;gap:var(--esp-2);width:100%}
+}
 /* =========================== 7. AVISO PRINCIPAL ======================== */
 .aviso{border:2px solid var(--c-acento);background:#FFFBF3;border-radius:var(--radio);padding:var(--esp-4);box-shadow:var(--sombra-sm)}
 .aviso__titulo{display:flex;align-items:center;gap:.6rem;color:#8A5A12;margin-bottom:var(--esp-2)}
@@ -459,10 +476,31 @@ function icono($nombre){
 <div class="franja">
   <div class="contenedor franja__fila">
     <?= icono('info') ?>
-    <p><?= e(cfg('franja_texto')) ?> <strong>Sitio patrocinado y administrado por: <?= e(cfg('responsable')) ?>.</strong></p>
+    <p><?= e(cfg('franja_texto')) ?></p>
   </div>
 </div>
 <?php endif; ?>
+
+<!-- ========================= PATROCINIO ========================= -->
+<!-- Banner del patrocinante del sitio. Nombre y cédula se editan arriba. -->
+<div class="patrocinio">
+  <div class="contenedor patrocinio__fila">
+    <span class="patrocinio__rotulo">Patrocinado por</span>
+    <div class="patrocinio__tarjeta">
+      <div class="patrocinio__dato">
+        <span class="patrocinio__et">Patrocinador</span>
+        <span class="patrocinio__val"><?= e(cfg('responsable')) ?></span>
+      </div>
+      <?php if (cfg('patrocinador_cedula') !== ''): ?>
+      <div class="patrocinio__dato">
+        <span class="patrocinio__et">Cédula</span>
+        <span class="patrocinio__val"><?= e(cfg('patrocinador_cedula')) ?></span>
+      </div>
+      <?php endif; ?>
+    </div>
+    <span class="patrocinio__nota">Contenido educativo independiente</span>
+  </div>
+</div>
 
 <!-- ======================== AVISO IMPORTANTE ======================== -->
 <!-- No elimines esta sección: es la aclaración de independencia del sitio. -->
@@ -707,7 +745,7 @@ function icono($nombre){
     </p>
     <?php endif; ?>
     <p style="font-size:var(--t-sm);color:var(--c-texto-suave)">
-      Responsable, patrocinante y anunciante del sitio: <strong><?= e(cfg('responsable')) ?></strong>.
+      Responsable, patrocinante y anunciante del sitio: <strong><?= e(cfg('responsable')) ?></strong><?php if (cfg('patrocinador_cedula') !== ''): ?>, con cédula de ciudadanía N.º <?= e(cfg('patrocinador_cedula')) ?><?php endif; ?>.
       <?php if (cfg('contacto_email') === ''): ?>
         <span class="pendiente">PENDIENTE: correo de contacto</span>
       <?php else: ?>
@@ -799,9 +837,7 @@ function icono($nombre){
       Por ahora este sitio no usa cookies de publicidad ni de analítica. Si en el futuro se activan,
       solo se cargarán si las aceptas.
       <?php endif; ?>
-      Responsable del sitio y del tratamiento:
-      <strong><?= e(cfg('responsable')) ?></strong>. Más detalles en
-      <a href="#privacidad">Privacidad y cookies</a>.
+      Más detalles en <a href="#privacidad">Privacidad y cookies</a>.
     </p>
     <div class="cookies__acciones">
       <button class="btn btn--secundario" id="cookiesRechazar" type="button">Rechazar</button>
