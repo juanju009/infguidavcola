@@ -76,7 +76,7 @@ $SITE_CONFIG = [
   'mostrar_modal_inicial'  => false, // true solo si realmente necesitas un aviso emergente
   'modal_titulo'           => 'Antes de continuar',
   'modal_texto'            => 'Este es un sitio educativo independiente. No es el sitio oficial de ninguna entidad bancaria y no realiza operaciones financieras.',
-  'mostrar_aviso_cookies'  => true, // se muestra solo si hay medición configurada
+  'mostrar_aviso_cookies'  => true, // true = se muestra siempre (con o sin medición configurada)
 
 ];
 
@@ -459,7 +459,7 @@ function icono($nombre){
 <div class="franja">
   <div class="contenedor franja__fila">
     <?= icono('info') ?>
-    <p><?= e(cfg('franja_texto')) ?></p>
+    <p><?= e(cfg('franja_texto')) ?> <strong>Sitio patrocinado y administrado por: <?= e(cfg('responsable')) ?>.</strong></p>
   </div>
 </div>
 <?php endif; ?>
@@ -707,9 +707,9 @@ function icono($nombre){
     </p>
     <?php endif; ?>
     <p style="font-size:var(--t-sm);color:var(--c-texto-suave)">
-      Responsable del sitio: <?= e(cfg('responsable')) ?>.
+      Responsable, patrocinante y anunciante del sitio: <strong><?= e(cfg('responsable')) ?></strong>.
       <?php if (cfg('contacto_email') === ''): ?>
-       
+        <span class="pendiente">PENDIENTE: correo de contacto</span>
       <?php else: ?>
         Contacto: <a href="mailto:<?= e(cfg('contacto_email')) ?>"><?= e(cfg('contacto_email')) ?></a>.
       <?php endif; ?>
@@ -744,7 +744,7 @@ function icono($nombre){
         <ul>
           <li><a href="#aviso">Aviso de independencia</a></li>
           <li><a href="#privacidad">Privacidad y cookies</a></li>
-          <?php if ($medicion_activa && cfg('mostrar_aviso_cookies')): ?>
+          <?php if (cfg('mostrar_aviso_cookies')): ?>
           <li><a href="#privacidad" id="abrirPreferencias">Preferencias de cookies</a></li>
           <?php endif; ?>
           <?php if (cfg('contacto_email') !== ''): ?>
@@ -788,12 +788,19 @@ function icono($nombre){
 <?php endif; ?>
 
 <!-- ======================= AVISO DE COOKIES ========================= -->
-<?php if ($medicion_activa && cfg('mostrar_aviso_cookies')): ?>
+<?php if (cfg('mostrar_aviso_cookies')): ?>
 <div class="cookies" id="avisoCookies" role="region" aria-label="Aviso de cookies">
   <div class="contenedor cookies__fila">
     <p>
+      <?php if ($medicion_activa): ?>
       Usamos cookies de medición para entender cómo se usa esta guía y para medir nuestras campañas
-      publicitarias. Solo se activan si las aceptas. Más detalles en
+      publicitarias. Solo se activan si las aceptas.
+      <?php else: ?>
+      Por ahora este sitio no usa cookies de publicidad ni de analítica. Si en el futuro se activan,
+      solo se cargarán si las aceptas.
+      <?php endif; ?>
+      Responsable del sitio y del tratamiento:
+      <strong><?= e(cfg('responsable')) ?></strong>. Más detalles en
       <a href="#privacidad">Privacidad y cookies</a>.
     </p>
     <div class="cookies__acciones">
@@ -884,8 +891,10 @@ function icono($nombre){
   }
 
   /* ---------- 4. Aviso de cookies (consentimiento real) ---------- */
+  /* El aviso se muestra aunque no haya medición configurada; cargarMedicion()
+     no hace nada mientras no exista un ID real.                              */
   var aviso = document.getElementById('avisoCookies');
-  if (CONFIG.requiereConsentimiento) {
+  if (aviso) {
     var decision = leerConsentimiento();
     if (decision === 'aceptado') {
       cargarMedicion();
