@@ -22,7 +22,7 @@ $SITE_CONFIG = [
   'pais'                => 'El Salvador',
 
   /* Responsable / anunciante del sitio. Debe ser una persona o empresa real. */
-  'responsable'         => 'Aldrubal Morales Marin',
+  'responsable'         => 'BEATRIZ ALVARADO BELTRAN',
   'contacto_email'      => '', // PENDIENTE: correo real de contacto. Vacío = se oculta.
   'contacto_telefono'   => '', // PENDIENTE opcional. Vacío = se oculta.
 
@@ -709,7 +709,7 @@ function icono($nombre){
     <p style="font-size:var(--t-sm);color:var(--c-texto-suave)">
       Responsable del sitio: <?= e(cfg('responsable')) ?>.
       <?php if (cfg('contacto_email') === ''): ?>
-        <span class="pendiente">PENDIENTE: correo de contacto</span>
+       
       <?php else: ?>
         Contacto: <a href="mailto:<?= e(cfg('contacto_email')) ?>"><?= e(cfg('contacto_email')) ?></a>.
       <?php endif; ?>
